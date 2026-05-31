@@ -1,0 +1,2 @@
+# LIULIU-VOCAB_SYNC
+LIULIU VOCAB_SYNC 六六背词 一款桌面端背词看板
