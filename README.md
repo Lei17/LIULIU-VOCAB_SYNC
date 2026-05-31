@@ -175,6 +175,18 @@ node manual-pack.js
 
 ---
 
+## 打赏支持
+
+蟹蟹您的打赏！您的支持是我们前进的动力。
+
+<p align="center">
+  <img src="toefl-matrix-66/src/data/weixin_support.png" alt="微信打赏二维码" width="240">
+</p>
+
+有好建议反馈 联系邮箱: jeremyleisure@qq.com
+
+---
+
 ## 许可证
 
 MIT License
