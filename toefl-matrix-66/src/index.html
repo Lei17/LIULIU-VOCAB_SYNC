@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>66背词看板 - TOEFL矩阵记忆系统</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Top Navigation Bar -->
+  <header id="top-bar">
+    <div class="logo-section">
+      <span class="logo-icon">◈</span>
+      <h1 class="logo-text">MATRIX<span class="highlight">66</span></h1>
+      <span class="subtitle">TOEFL记忆矩阵</span>
+    </div>
+    <nav class="top-controls">
+      <div class="list-selector">
+        <button id="btn-prev-list" class="ctrl-btn" title="上一组">◀</button>
+        <select id="list-select"></select>
+        <button id="btn-next-list" class="ctrl-btn" title="下一组">▶</button>
+        <span id="list-info" class="list-info">List 1 / 66词</span>
+      </div>
+      <div class="filter-controls">
+        <button id="btn-filter-all" class="filter-btn active" data-filter="all">全部</button>
+        <button id="btn-filter-unfamiliar" class="filter-btn" data-filter="unfamiliar">仅不熟悉</button>
+        <button id="btn-filter-familiar" class="filter-btn" data-filter="familiar">仅熟悉</button>
+      </div>
+      <div class="action-buttons">
+        <button id="btn-import" class="action-btn import-btn" title="导入词库">📥 导入</button>
+        <button id="btn-stats" class="action-btn" title="统计仪表盘">📊 统计</button>
+        <button id="btn-settings" class="action-btn" title="系统设置">⚙ 设置</button>
+        <button id="btn-sponsor" class="action-btn" title="打赏支持">💝 打赏</button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <main id="main-content">
+    <!-- Stats Panel (hidden by default) -->
+    <aside id="stats-panel" class="hidden">
+      <div class="stats-header">
+        <h2>◈ 学习统计</h2>
+        <button id="btn-close-stats" class="close-btn">✕</button>
+      </div>
+      <div class="stats-body">
+        <div class="stat-card">
+          <div class="stat-label">当前List掌握率</div>
+          <div class="stat-value" id="stat-list-rate">0%</div>
+          <div class="stat-bar"><div class="stat-bar-fill" id="stat-list-bar"></div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">总词库进度</div>
+          <div class="stat-value" id="stat-total-rate">0%</div>
+          <div class="stat-bar"><div class="stat-bar-fill" id="stat-total-bar"></div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">今日学习量</div>
+          <div class="stat-value neon-cyan" id="stat-today-count">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">连续打卡天数</div>
+          <div class="stat-value neon-magenta" id="stat-streak">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">总熟悉词数</div>
+          <div class="stat-value neon-green" id="stat-familiar-total">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">总不熟悉词数</div>
+          <div class="stat-value neon-red" id="stat-unfamiliar-total">0</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Settings Panel (hidden by default) -->
+    <aside id="settings-panel" class="hidden">
+      <div class="settings-header">
+        <h2>⚙ 系统设置</h2>
+        <button id="btn-close-settings" class="close-btn">✕</button>
+      </div>
+      <div class="settings-body">
+        <div class="setting-group">
+          <label>音频发音</label>
+          <div class="setting-row">
+            <span>语音类型</span>
+            <select id="setting-voice-type">
+              <option value="us">美音 (US)</option>
+              <option value="uk">英音 (UK)</option>
+            </select>
+          </div>
+          <div class="setting-row">
+            <span>语速</span>
+            <input type="range" id="setting-speech-rate" min="0.8" max="1.5" step="0.1" value="1.0">
+            <span id="speech-rate-display">1.0x</span>
+          </div>
+        </div>
+        <div class="setting-group">
+          <label>矩阵显示</label>
+          <div class="setting-row">
+            <span>每屏词数</span>
+            <select id="setting-matrix-density">
+              <option value="36">36词 (6×6)</option>
+              <option value="48">48词 (8×6)</option>
+              <option value="66" selected>66词 (11×6)</option>
+              <option value="80">80词 (10×8)</option>
+            </select>
+          </div>
+          <div class="setting-row">
+            <span>字体大小</span>
+            <input type="range" id="setting-font-size" min="12" max="22" step="1" value="16">
+            <span id="font-size-display">16px</span>
+          </div>
+        </div>
+        <div class="setting-group">
+          <label>显示主题</label>
+          <div class="theme-selector" id="theme-selector">
+            <button class="theme-option" data-theme="cyberpunk" title="赛博朋克">
+              <span class="theme-preview cyberpunk-preview"></span>
+              <span class="theme-name">赛博朋克</span>
+            </button>
+            <button class="theme-option" data-theme="glass" title="毛玻璃沉浸">
+              <span class="theme-preview glass-preview"></span>
+              <span class="theme-name">毛玻璃</span>
+            </button>
+            <button class="theme-option" data-theme="minimal" title="极简黑白">
+              <span class="theme-preview minimal-preview"></span>
+              <span class="theme-name">极简</span>
+            </button>
+            <button class="theme-option" data-theme="soft" title="清新柔和">
+              <span class="theme-preview soft-preview"></span>
+              <span class="theme-name">柔和</span>
+            </button>
+            <button class="theme-option" data-theme="eyecare" title="护眼纸质">
+              <span class="theme-preview eyecare-preview"></span>
+              <span class="theme-name">护眼</span>
+            </button>
+            <button class="theme-option" data-theme="rain" title="雨天玻璃">
+              <span class="theme-preview rain-preview"></span>
+              <span class="theme-name">雨天</span>
+            </button>
+          </div>
+        </div>
+        <div class="setting-group">
+          <label>词库管理</label>
+          <div class="setting-row">
+            <button id="btn-import-settings" class="action-btn">📥 导入新词库</button>
+          </div>
+          <div class="setting-row wordlist-manager" id="wordlist-manager">
+            <div class="wordlist-empty" id="wordlist-empty">暂无已导入词库</div>
+            <div class="wordlist-items" id="wordlist-items"></div>
+          </div>
+        </div>
+        <div class="setting-group">
+          <label>数据管理</label>
+          <div class="setting-row">
+            <button id="btn-export-csv" class="action-btn">导出学习报告 (CSV)</button>
+          </div>
+          <div class="setting-row">
+            <button id="btn-reset-data" class="action-btn danger">重置所有数据</button>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Empty state overlay -->
+    <div id="empty-state" class="empty-state hidden">
+      <div class="empty-state-content">
+        <div class="empty-icon">📥</div>
+        <h2>欢迎使用 MATRIX66</h2>
+        <p>请先导入词库文件开始学习</p>
+        <p class="empty-hint">支持 CSV / TSV / JSON 格式</p>
+        <button id="btn-import-empty" class="import-cta">导入词库文件</button>
+      </div>
+    </div>
+
+    <!-- Import status toast -->
+    <div id="import-toast" class="import-toast hidden">
+      <span id="import-toast-msg"></span>
+    </div>
+
+    <!-- Sponsor modal -->
+    <div id="sponsor-modal" class="sponsor-modal hidden">
+      <div class="sponsor-card">
+        <button class="sponsor-close" id="btn-sponsor-close">&times;</button>
+        <p class="sponsor-slogan">蟹蟹 您的打赏！您的支持是我们前进的动力</p>
+        <img class="sponsor-qr" src="data/weixin_support.png" alt="收款二维码">
+        <p class="sponsor-contact">有好建议反馈 联系邮箱:  jeremyleisure@qq.com</p>
+      </div>
+    </div>
+
+    <!-- Word Matrix Grid -->
+    <section id="matrix-container">
+      <div id="word-matrix" class="matrix-grid"></div>
+    </section>
+
+    <!-- Tooltip (positioned absolutely) -->
+    <div id="word-tooltip" class="tooltip hidden">
+      <div class="tooltip-word" id="tooltip-word"></div>
+      <div class="tooltip-phonetic" id="tooltip-phonetic"></div>
+      <div class="tooltip-pos" id="tooltip-pos"></div>
+      <div class="tooltip-def" id="tooltip-def"></div>
+    </div>
+  </main>
+
+  <!-- Footer Status Bar -->
+  <footer id="status-bar">
+    <span id="status-mode">正常模式</span>
+    <span id="status-focus">-</span>
+    <span id="status-progress">掌握: 0 / 0</span>
+    <span class="hint">方向键导航 | Enter发音 | Space标记 | 左键发音 | 右键标记</span>
+  </footer>
+
+  <script src="storage.js"></script>
+  <script src="audio.js"></script>
+  <script src="tooltip.js"></script>
+  <script src="matrix.js"></script>
+  <script src="stats.js"></script>
+  <script src="keyboard.js"></script>
+  <script src="importer.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>

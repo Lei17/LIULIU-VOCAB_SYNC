@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+
+# Build output
+toefl-matrix-66/dist/
+
+# Packaged app
+toefl-matrix-66/packaged/
+toefl-matrix-66/release/
+toefl-matrix-66/build/
+
+# Executables
+*.exe
+
+# Credentials
+git token.txt
+
+# Data files
+TOEFL_*.csv
+
+# Design docs (keep local only)
+TOEFL*.md
